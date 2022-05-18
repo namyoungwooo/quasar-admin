@@ -17,6 +17,38 @@ export default store(function (/* { ssrContext } */) {
     modules: {
       // example
     },
+    state: {
+      fireUser: null,
+    },
+    actions: {
+      signOutAction({ commit }) {
+        auth.signOut().then(() => {
+          commit("setFireUser", null);
+        });
+      },
+      authAction({ commit }) {
+        auth.onAuthStatChanged((user) => {
+          if (user) {
+            commit("setFireUser", user);
+          }
+        });
+      },
+    },
+    mutations: {
+      setFireUser(state, firebaseUser) {
+        console.log('>>>>>>>>>> setFireUser / state.fireUser  :  ' + firebaseUser);
+        state.fireUser = firebaseUser;
+      },
+    },
+    getters: {
+      getFireUser(state) {
+        return state.fireUser;
+      },
+      isUserAuth(state) {
+        return !!state.fireUser;
+      },
+    },
+
 
     // enable strict mode (adds overhead!)
     // for dev mode and --debug builds only
