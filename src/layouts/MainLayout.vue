@@ -1,7 +1,7 @@
 <template>
     <q-layout view="lHh Lpr lFf">
         <q-header elevated="elevated">
-            <q-toolbar>
+            <q-toolbar >
                 <q-btn
                     flat="flat"
                     dense="dense"
@@ -10,7 +10,12 @@
                     icon="menu"
                     aria-label="Menu"/>
                 <q-toolbar-title>
-                    Wise Haccp App
+                    <div v-if="logined()">
+                        Wise Haccp App
+                    </div>
+                    <div v-if="!isUserAuth">
+                        Not Logined
+                    </div>
                 </q-toolbar-title>
                 <q-space/>
                 <div class="q-gutter-sm row items-center no-wrap">
@@ -137,9 +142,9 @@
         import Messages from "./Messages";
 
         import {defineComponent, ref} from 'vue'
-        import { useRouter, useRoute } from "vue-router";
-         import { useStore, mapActions, mapGetters } from "vuex";
-//import { emptyStatement } from '@babel/types';
+        import {useRouter, useRoute} from "vue-router";
+        import {useStore, mapActions, mapGetters} from "vuex";
+        //import { emptyStatement } from '@babel/types';
 
         export default defineComponent({
             name: 'MainLayout',
@@ -151,9 +156,8 @@
 
             setup() {
                 const leftDrawerOpen = ref(false);
-                //const store = useStore();
-                //const store1 = useStore();  // 의미 없음... store로 생성시 고정해 둔 듯
-
+                // const store = useStore(); const store1 = useStore();   의미 없음... store로 생성시
+                // 고정해 둔 듯
 
                 return {
                     leftDrawerOpen,
@@ -166,29 +170,33 @@
             methods: {
                 ...mapGetters(["getFireUser", "isUserAuth"]),
 
-                googleLogin() {
+                logined() {
+                    if (this.getFireUser() == null || this.getFireUser() == undefined || this.getFireUser() == '')
+                        return false;
+                    else
+                        return true;
 
-                }
-            },
-            beforeMount()
-            {
-              //this.$store.commit("setFireUser", "testuser");
+                    }
+                },
+            beforeMount() {
+                //this.$store.commit("setFireUser", "testuser");
 
-              console.log('beforeMount----');
-              console.log('1=> '  + this.$store1); //통과.. 모든 객체는 setup()에서 할것
-              //console.log('1-1=> '  + $store1);  //죽어.. -- stro
-              //this.$store.commit("setFireUser", "test%%");  //ok
-              //console.log('3=> ' + this.$store.getters.fireUser );  // ok
+                console.log('beforeMount----');
+                console.log('1=> ' + this.$store1); //통과.. 모든 객체는 setup()에서 할것
+                // console.log('1-1=> '  + $store1);  죽어.. -- stro
+                // this.$store.commit("setFireUser", "test%%");  ok console.log('3=> ' +
+                // this.$store.getters.fireUser );   ok
 
-              console.log('4=> getFireUser() =>' + this.getFireUser() );  //ok --- mapGetters의 힘
+                console.log('4=> getFireUser() =>' + this.getFireUser()); //ok --- mapGetters의 힘
 
-              if(this.getFireUser()==null ||this.getFireUser()==undefined || this.getFireUser()== '')
-                this.$router.push({ path: "/Login-1" });
+                if (this.getFireUser() == null || this.getFireUser() == undefined || this.getFireUser() == '')
+                    this
+                        .$router
+                        .push({path: "/Login-1"});
                 console.log('beforeMount end');
             },
 
             mounted() {
-
 
                 if (localStorage.checkbox && localStorage.checkbox !== "") {
                     this.remember = true;
